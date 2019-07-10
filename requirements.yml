@@ -1,0 +1,13 @@
+name: swim-backend
+dependencies:
+- python
+- pytest
+- pytest-cov
+- Flask
+- Flask-SQLAlchemy
+- SQLAlchemy
+- Werkzeug
+- pip:
+  - marshmallow
+  - marshmallow-sqlalchemy
+  - flask-migrate
