@@ -66,6 +66,7 @@ def load_app_config(package: str, filename: t.Optional[str] = None) -> t.Dict[st
     default_config_file = resource_filename(package, 'config.yml')
     config = _from_yaml(default_config_file)
 
+    # load additional config file
     if filename:
         extra_config = _from_yaml(filename)
         config.update(extra_config)

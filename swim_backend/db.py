@@ -86,3 +86,7 @@ def property_has_changed(obj: db.Model, property: str, db: SQLAlchemy = db) -> b
     history = state.get_history(property, True)
 
     return history.has_changes()
+
+
+def make_database_uri_from_config(config, engine='postgresql+psycopg2'):
+    return f'{engine}://{config["db_user"]}:{config["db_password"]}@{config["db_host"]}/{config["db_name"]}'

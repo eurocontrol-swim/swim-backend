@@ -27,25 +27,23 @@ http://opensource.org/licenses/BSD-3-Clause
 
 Details on EUROCONTROL: http://www.eurocontrol.int
 """
-from setuptools import setup, find_packages
+import pytest
+
+from swim_backend.db import make_database_uri_from_config
 
 __author__ = "EUROCONTROL (SWIM)"
 
-setup(
-    name='swim-backend',
-    version='0.0.2',
-    description='SWIM Backend tools',
-    author='EUROCONTROL (SWIM)',
-    author_email='',
-    packages=find_packages(exclude=['tests']),
-    url='https://bitbucket.org/antavelos-eurocontrol/swim-backend',
-    install_requires=[
-    ],
-    tests_require=[
-        'pytest',
-        'pytest-cov'
-    ],
-    platforms=['Any'],
-    license='see LICENSE',
-    zip_safe=False
-)
+
+@pytest.mark.parametrize('config, expected_database_uri', [
+    (
+        {
+            'db_host': 'localhost:5432',
+            'db_user': 'test',
+            'db_password': 'test',
+            'db_name': 'testdb'
+        },
+        'postgresql+psycopg2://test:test@localhost:5432/testdb'
+    )
+])
+def test_make_database_uri_from_config(config, expected_database_uri):
+    assert expected_database_uri == make_database_uri_from_config(config)
