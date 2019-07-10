@@ -7,6 +7,7 @@ dependencies:
 - Flask-SQLAlchemy
 - SQLAlchemy
 - Werkzeug
+- PyYAML
 - pip:
   - marshmallow
   - marshmallow-sqlalchemy
