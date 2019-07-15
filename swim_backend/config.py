@@ -53,23 +53,14 @@ def _from_yaml(filename: str) -> t.Union[t.Dict[str, t.Any], None]:
     return obj or None
 
 
-def load_app_config(package: str, filename: t.Optional[str] = None) -> t.Dict[str, t.Any]:
+def load_app_config(filename: str) -> t.Dict[str, t.Any]:
     """
-    It expects and loads a default config.yml under the package directory. Optionally, there might be an additional
-    config file provided which must also exist under the same directory. The second file overrides the configuration
-    of the default one.
+    It loads the configuration from the provided config file which should be a YAML file.
 
-    :param package:
     :param filename:
     :return:
     """
-    default_config_file = resource_filename(package, 'config.yml')
-    config = _from_yaml(default_config_file)
-
-    # load additional config file
-    if filename:
-        extra_config = _from_yaml(filename)
-        config.update(extra_config)
+    config = _from_yaml(filename)
 
     return config
 
