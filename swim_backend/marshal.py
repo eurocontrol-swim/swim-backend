@@ -32,32 +32,9 @@ from functools import wraps
 
 import marshmallow
 
-from swim_backend.db import db
 from swim_backend.typing import ViewResponse, JSONType
 
 __author__ = "EUROCONTROL (SWIM)"
-
-
-def unmarshal(schema_class: t.Type[marshmallow.Schema],
-              data: t.Dict[str, t.Any],
-              instance: t.Optional[db.Model] = None,
-              **kwargs: object) -> db.Model:
-    """
-    Deserializes a dictionary into a Model.
-
-    :param schema_class:
-    :param data:
-    :param instance:
-    :param kwargs: extra arguments applying to Schema.load()
-    :return:
-    :raises: marshmallow.ValidationError
-    """
-    obj, errors = schema_class(**kwargs).load(data, instance=instance)
-    if errors:
-        error_per_property = [f"'{property}': {error_message}" for property, error_message in errors.items()]
-        raise marshmallow.ValidationError(", ".join(error_per_property))
-
-    return obj
 
 
 def marshal_with(schema_class: marshmallow.Schema, many: bool= False) -> t.Callable:
@@ -78,7 +55,7 @@ def marshal_with(schema_class: marshmallow.Schema, many: bool= False) -> t.Calla
             else:
                 obj, status_code = result, 200
 
-            marshaled_obj: JSONType = schema_class(many=many).dump(obj).data
+            marshaled_obj: JSONType = schema_class(many=many).dump(obj)
 
             return marshaled_obj, status_code
         return wrapper
