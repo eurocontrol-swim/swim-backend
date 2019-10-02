@@ -9,6 +9,7 @@ dependencies:
 - Werkzeug
 - PyYAML
 - pip:
+  - requests
   - marshmallow
   - marshmallow-sqlalchemy
   - flask-migrate

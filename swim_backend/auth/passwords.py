@@ -27,25 +27,61 @@ http://opensource.org/licenses/BSD-3-Clause
 
 Details on EUROCONTROL: http://www.eurocontrol.int
 """
-from setuptools import setup, find_packages
+import hashlib
+from typing import List
+
+from requests import Session
 
 __author__ = "EUROCONTROL (SWIM)"
 
-setup(
-    name='swim-backend',
-    version='0.0.5',
-    description='SWIM Backend tools',
-    author='EUROCONTROL (SWIM)',
-    author_email='',
-    packages=find_packages(exclude=['tests']),
-    url='https://bitbucket.org/antavelos-eurocontrol/swim-backend',
-    install_requires=[
-    ],
-    tests_require=[
-        'pytest',
-        'pytest-cov'
-    ],
-    platforms=['Any'],
-    license='see LICENSE',
-    zip_safe=False
-)
+
+def get_pwned_password_range(password_sha1_prefix: str) -> List[str]:
+    """
+    Retrieves a range of sha1 pwned passwords from haveibeenpwned API whose 5 first characters match with the provided
+    sha1 prefix.
+
+    :param password_sha1_prefix: must be 5 characters long
+    :return:
+    """
+    session = Session()
+
+    response = session.get(f'https://api.pwnedpasswords.com/range/{password_sha1_prefix}')
+
+    if response.status_code not in [200]:
+        raise ValueError(response.text)
+
+    return response.text.split('\r\n')
+
+
+def password_has_been_pwned(password: str) -> bool:
+    """
+    Chacks if the provided password has been pwned by querying the haveibeenpwned API
+
+    :param password:
+    :return:
+    """
+    password_sha1 = hashlib.sha1(password.encode('utf-8')).hexdigest().upper()
+
+    password_sha1_prefix = password_sha1[:5]
+
+    pwned_password_suffixes = get_pwned_password_range(password_sha1_prefix)
+
+    full_pwned_passwords_sha1 = [password_sha1_prefix + suffix[:35] for suffix in pwned_password_suffixes]
+
+    return password_sha1 in full_pwned_passwords_sha1
+
+
+def is_strong(password: str, min_length: int) -> bool:
+    """
+    Determines whether the password is strong enough using the following criteria:
+    - it does not contain spaces
+    - its length is equal or bigger that max_length
+    - it has been pwned before (checked via haveibeenpwned API)
+
+    :param password:
+    :param min_length:
+    :return:
+    """
+    return ' ' not in password \
+        and len(password) >= min_length \
+        and not password_has_been_pwned(password)
