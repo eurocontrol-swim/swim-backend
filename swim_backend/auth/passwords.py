@@ -28,11 +28,13 @@ http://opensource.org/licenses/BSD-3-Clause
 Details on EUROCONTROL: http://www.eurocontrol.int
 """
 import hashlib
-from typing import List
+from typing import List, Optional
 
 from requests import Session
 
 __author__ = "EUROCONTROL (SWIM)"
+
+MIN_PASSWORD_LENGTH = 10
 
 
 def get_pwned_password_range(password_sha1_prefix: str) -> List[str]:
@@ -71,7 +73,7 @@ def password_has_been_pwned(password: str) -> bool:
     return password_sha1 in full_pwned_passwords_sha1
 
 
-def is_strong(password: str, min_length: int) -> bool:
+def is_strong(password: str, min_length: Optional[int] = MIN_PASSWORD_LENGTH) -> bool:
     """
     Determines whether the password is strong enough using the following criteria:
     - it does not contain spaces
