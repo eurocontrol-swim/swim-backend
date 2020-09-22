@@ -10,6 +10,8 @@ dependencies:
 - PyYAML
 - pip:
   - requests
+  - mongoengine
+  - redis
   - marshmallow
   - marshmallow-sqlalchemy
   - flask-migrate
