@@ -55,6 +55,14 @@ def _from_yaml(filename: str) -> t.Union[t.Dict[str, t.Any], None]:
     return obj or None
 
 
+class Config(dict):
+    def from_yaml(filename: str):
+        return _from_yaml(filename)
+
+
+config = Config()
+
+
 def load_app_config(filename: str) -> t.Dict[str, t.Any]:
     """
     It loads the configuration from the provided config file which should be a YAML file.
@@ -62,6 +70,11 @@ def load_app_config(filename: str) -> t.Dict[str, t.Any]:
     :param filename:
     :return:
     """
+    global config
+
+    if len(config) > 0:
+        raise Exception("Configuration should only be loaded once.")
+
     config = _from_yaml(filename)
 
     return config
