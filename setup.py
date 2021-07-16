@@ -40,6 +40,8 @@ setup(
     packages=find_packages(exclude=['tests']),
     url='https://github.com/eurocontrol-swim/swim-backend',
     install_requires=[
+        'mongoengine',
+        'redis'
     ],
     tests_require=[
         'pytest',

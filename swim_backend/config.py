@@ -56,8 +56,14 @@ def _from_yaml(filename: str) -> t.Union[t.Dict[str, t.Any], None]:
 
 
 class Config(dict):
-    def from_yaml(filename: str):
-        return _from_yaml(filename)
+    def from_yaml(self, filename: str):
+        obj = _from_yaml(filename)
+        if obj is None:
+            return
+
+        self.update(obj)
+
+        return self
 
 
 config = Config()

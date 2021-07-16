@@ -8,10 +8,10 @@ dependencies:
 - SQLAlchemy
 - Werkzeug
 - PyYAML
+- mongoengine
+- redis
 - pip:
   - requests
-  - mongoengine
-  - redis
   - marshmallow
   - marshmallow-sqlalchemy
   - flask-migrate
