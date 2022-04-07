@@ -134,6 +134,7 @@ def configure_mongo(**kwargs) -> MongoClient:
     :param kwargs: see mongoengine.connection.connect
     :return: MongoClient
     """
+    kwargs['db'] = os.environ.get('MONGO_DB_NAME', kwargs['db'])
     return connect(**kwargs)
 
 
